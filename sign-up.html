@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<head>
+ <meta charset="utf-8" />
+ <title>新增學生 - 金智外宿通報系統</title>
+ <!-- 網站資訊 -->
+ <meta name="description" content="使用Google sheet的api紀錄出缺席" />
+ <meta name="author" content="毛哥EM" />
+ <!-- 讓網址正常顯示以及裝飾 -->
+ <meta name="viewport" content="width=device-width, initial-scale=1" />
+ <meta name="theme-color" content="00BFFF" />
+ <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+ <!-- 載入jQuery -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+</head>
+<body>
+ <main>
+  <h1><a href="index.html">金智外宿通報系統</a></h1>
+  <p>新增學生</p>
+  <input type="text" class="form-control" id="name" />
+  <button type="button" id="sendOrder">新增</button>
+  <p>
+   <a href="https://Edit-Mr.github.io">EM</a>製作<br />
+   送出後請稍等數秒 勿重複新增
+  </p>
+ </main>
+ <script>
+  $(function () {
+      // 監聽 按鈕點擊
+  
+      $("#sendOrder").click(function (e) {
+          // 姓名
+  
+          var name = $("#name").val();
+  
+          $("input").focus(function () {
+              $(this).css("border", "");
+          });
+  
+          // 擋住不填資料
+  
+          if (name == "") {
+              $("#name").css("border", "1px solid #ff0000");
+          } else {
+              var name = name.replace(" ", "");
+  
+              var data = {
+                  name: name,
+              };
+  
+              $.ajax({
+                  // 這邊用get type
+  
+                  type: "get",
+  
+                  // api url - google appscript 產出的 url
+  
+                  url: "https://script.google.com/............",
+  
+                  // 剛剛整理好的資料帶入
+  
+                  data: data,
+  
+                  // 資料格式是JSON
+  
+                  dataType: "JSON",
+  
+                  // 成功送出 會回頭觸發下面這塊
+  
+                  success: function (response) {
+                      console.log(response);
+  
+                      alert("新增成功!!");
+                  },
+              });
+          }
+      });
+  });
+ </script>
+</body>
