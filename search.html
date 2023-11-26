@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8" />
+    <title>查詢 - 金智外宿通報系統</title>
+    <!-- 網站資訊 -->
+    <meta name="description" content="使用Google sheet的api紀錄出缺席" />
+    <meta name="author" content="EM" />
+    <!-- 讓網址正常顯示以及裝飾 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="00BFFF" />
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+    <!-- 載入jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+</head>
+<body>
+    <main>
+        <h1><a href="index.html">金智外宿通報系統</a></h1>
+        <p>紀錄查詢</p>
+        <input type="text" id="name" />
+        <button type="button" id="send">查詢</button>
+        <!-- 顯示查詢結果的表格 先隱藏 -->
+        <table class="table table-striped" style="display: none;">
+            <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>報到時間</th>
+                    <th>外宿剩下天數</th>
+                </tr>
+            </thead>
+            <tbody id="dataView">
+                <!-- 查詢到的資料會插入到這裡 -->
+            </tbody>
+        </table>
+        <p>
+            <a href="https://Edit-Mr.github.io">EM</a>製作<br />
+            送出後請稍等數秒
+        </p>
+    </main>
+    <script>
+        //當傳送按鈕被點擊
+        $(function () {
+            $("#send").click(function (e) {
+                var status = true;
+                var name = $("#name").val();
+                $("input").focus(function () {
+                    $(this).css("border", "");
+                });
+                //擋住沒有輸入姓名
+                if (name == "") {
+                    $("#name").css("border", "1px solid #ff0000");
+                } else {
+                    var data = {
+                        name: name,
+                    };
+                    //Post到前面做的API，記得更改網址
+                    $.ajax({
+                        // 這邊用post type
+                        type: "post",
+                        // api url - google appscript 產出的 url
+                        url: "https://script.google.com/...........",
+                        data: data,
+                        dataType: "JSON",
+                        success: function (response) {
+                            var content = "";
+                            //把資料一行行做出表格
+                            response.forEach((element) => {
+                                var [name, time, remain] = element.data;
+                                var index = element.index;
+                                content += `<tr>
+                <td>${name}</td>
+                <td>${new Date(time)}</td>
+                <td>${remain}</td>
+              </tr>`;
+                            });
+                            //如果有資料的話顯示表格，否則提示查無資料
+                            if (content) {
+                                document.getElementsByClassName("table-striped")[0].style.display = "table";
+                            } else {
+                                alert("查無資料");
+                            }
+                            var dataView = document.getElementById("dataView");
+                            dataView.innerHTML = content;
+                            $("#name").val("");
+                        },
+                    });
+                }
+            });
+        });
+    </script>
+</body>
